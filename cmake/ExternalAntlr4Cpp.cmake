@@ -127,8 +127,7 @@ set(ANTLR4CPP_LIBS "${INSTALL_DIR}/lib")
 #
 # Param 1 project name
 # Param 1 namespace (postfix for dependencies)
-# Param 2 Lexer file (full path)
-# Param 3 Parser File (full path)
+# Param 2, 3, ... antlr grammar files
 #
 # output
 #
@@ -138,9 +137,14 @@ set(ANTLR4CPP_LIBS "${INSTALL_DIR}/lib")
 
 macro(antlr4cpp_process_grammar
     antlr4cpp_project
-    antlr4cpp_project_namespace
-    antlr4cpp_grammar_lexer
-    antlr4cpp_grammar_parser)
+    antlr4cpp_project_namespace)
+
+  set (antlr_grammar_files ${ARGN})
+
+  list(LENGTH antlr_grammar_files num_extra_args)
+  if (${num_extra_args} EQUAL 0)
+    message(FATAL_ERROR "At least one antlr grammar has to be specified")
+  endif ()
 
   if(EXISTS "${ANTLR4CPP_JAR_LOCATION}")
     message(STATUS "Found antlr tool: ${ANTLR4CPP_JAR_LOCATION}")
@@ -152,9 +156,9 @@ macro(antlr4cpp_process_grammar
     COMMAND
     ${CMAKE_COMMAND} -E make_directory ${ANTLR4CPP_GENERATED_SRC_DIR}
     COMMAND
-    "${Java_JAVA_EXECUTABLE}" -jar "${ANTLR4CPP_JAR_LOCATION}" -Werror -Dlanguage=Cpp -listener -visitor -o "${ANTLR4CPP_GENERATED_SRC_DIR}/${antlr4cpp_project_namespace}" -package ${antlr4cpp_project_namespace} "${antlr4cpp_grammar_lexer}" "${antlr4cpp_grammar_parser}"
+    "${Java_JAVA_EXECUTABLE}" -jar "${ANTLR4CPP_JAR_LOCATION}" -Werror -Dlanguage=Cpp -listener -visitor -o "${ANTLR4CPP_GENERATED_SRC_DIR}/${antlr4cpp_project_namespace}" -package ${antlr4cpp_project_namespace} ${antlr_grammar_files}
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-    DEPENDS "${antlr4cpp_grammar_lexer}" "${antlr4cpp_grammar_parser}"
+    DEPENDS ${antlr_grammar_files}
     )
 
   # Find all the input files
