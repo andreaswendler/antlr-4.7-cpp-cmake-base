@@ -1,6 +1,6 @@
 #include <iostream>
 #include <antlr4-runtime.h>
-#include "TParser.h"
+#include "HelloParser.h"
 
 int main() {
   std::cout << "Hello World" << std::endl;

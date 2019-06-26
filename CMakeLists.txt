@@ -16,10 +16,9 @@ link_directories( ${ANTLR4CPP_LIBS} )
 message(STATUS "Found antlr4cpp libs: ${ANTLR4CPP_LIBS} and includes: ${ANTLR4CPP_INCLUDE_DIRS} ")
 
 # Call macro to add lexer and grammar to your build dependencies.
-# Alternatively, the macro can be called with only one grammar file containing lexer and parser
+# Alternatively, the macro can be called with two files containing lexer and parser seperated
 antlr4cpp_process_grammar(demo antlrcpptest
-  ${CMAKE_CURRENT_SOURCE_DIR}/TLexer.g4
-  ${CMAKE_CURRENT_SOURCE_DIR}/TParser.g4)
+  ${CMAKE_CURRENT_SOURCE_DIR}/Hello.g4)
 # include generated files in project environment
 include_directories(${antlr4cpp_include_dirs_antlrcpptest})
 
